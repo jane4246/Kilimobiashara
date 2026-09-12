@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: kilimobiashara
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    healthCheckPath: /healthz
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: kilimobiashara-db
+          property: connectionString
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-5-mini
+
+databases:
+  - name: kilimobiashara-db
+    plan: free
+    databaseName: kilimobiashara
+    user: kilimobiashara
